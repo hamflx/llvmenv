@@ -145,7 +145,7 @@ impl CMakeGenerator {
             CMakeGenerator::VisualStudioWin64 | CMakeGenerator::VisualStudio => {
                 vec!["--config".into(), format!("{:?}", build_type)]
             }
-            CMakeGenerator::Platform => Vec::new(),
+            CMakeGenerator::Platform => vec!["-j".into(), format!("{}", nproc)],
             CMakeGenerator::Makefile | CMakeGenerator::Ninja => {
                 vec!["--".into(), "-j".into(), format!("{}", nproc)]
             }
