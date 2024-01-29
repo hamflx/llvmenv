@@ -163,7 +163,9 @@ fn main() -> error::Result<()> {
             if discard {
                 entry.clean_cache_dir().unwrap();
             }
-            entry.checkout().unwrap();
+            if entry.should_checkout()? {
+                entry.checkout().unwrap();
+            }
             if update {
                 entry.update().unwrap();
             }

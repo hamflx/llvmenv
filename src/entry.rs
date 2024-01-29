@@ -476,6 +476,19 @@ impl Entry {
         Ok(())
     }
 
+    pub fn should_checkout(&self) -> Result<bool> {
+        let src = self.src_dir()?;
+        let done_dir = src.join("llvm-download-done");
+        Ok(!src.exists() || !done_dir.exists())
+    }
+
+    pub fn mark_download_done(&self) -> Result<()> {
+        let src = self.src_dir()?;
+        let done_dir = src.join("llvm-download-done");
+        std::fs::create_dir_all(done_dir)?;
+        Ok(())
+    }
+
     pub fn checkout(&self) -> Result<()> {
         match self {
             Entry::Remote { url, tools, .. } => {
@@ -486,6 +499,7 @@ impl Entry {
                     let src = Resource::from_url(&tool.url)?;
                     src.download(&path)?;
                 }
+                self.mark_download_done()?;
             }
             Entry::Local { .. } => {}
         }
